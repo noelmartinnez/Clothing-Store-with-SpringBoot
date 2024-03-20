@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Pedidos')"></head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col">
+                <h2>Lista de Pedidos</h2>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pedido: ${pedidos}">
+                        <td th:text="${pedido.id}"></td>
+                        <td th:text="${pedido.fecha}"></td>
+                        <td th:text="${pedido.usuario.nombre}"></td>
+                        <td>
+                            <form th:action="@{'/admin/pedidos/eliminar/' + ${pedido.id}}" method="post">
+                                <button type="submit" class="btn btn-danger btn-xs">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>

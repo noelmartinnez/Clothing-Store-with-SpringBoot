@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Categorias')"></head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+    <div class="row mt-4">
+        <div class="col">
+            <div class="text-center">
+                <a href="/admin/categorias/crear" class="btn btn-primary">Crear Categoria</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col">
+                <h2>Lista de Categorias</h2>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Categoria</th>
+                        <th>Descripcion</th>
+                        <th>Subcategoria</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="categoria: ${categorias}">
+                        <td th:text="${categoria.id}"></td>
+                        <td th:text="${categoria.nombre}"></td>
+                        <td th:text="${categoria.descripcion}"></td>
+                        <td th:text="${categoria.subcategoriaid}"></td>
+                        <td>
+                            <a class="btn btn-success btn-xs" th:href="@{/admin/categorias/editar/{categoriaId}(categoriaId=${categoria.id})}">Editar</a>
+                        </td>
+                        <td>
+                            <form th:action="@{'/admin/categorias/eliminar/' + ${categoria.id}}" method="post">
+                                <button type="submit" class="btn btn-danger btn-xs">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>

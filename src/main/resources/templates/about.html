@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Acerca de')">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                     userId=${usuario} ? ${usuario.getId()} : '',
+                     admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<div class="container">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="mt-4">Bienvenido a la Tienda de Ropa</h1>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-center">
+                    <h2>Nuestro Equipo</h2>
+                </div>
+                <ul>
+                    <li><strong>Francisco Fernández Ruiz:</strong> Desarrollador Frontend especializado en experiencias de usuario.</li>
+                    <li><strong>Juan Carlos Barbero Castejón:</strong> Experto en Backend y gestión de bases de datos.</li>
+                    <li><strong>Noel Martinez Pomares:</strong> Diseñador de interfaz y experiencia de usuario.</li>
+                    <li><strong>Adrian Rubio Candil:</strong> Responsable de Marketing y estrategias comerciales.</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <h2>Acerca de la Aplicación</h2>
+                </div>
+                <p>
+                    Bienvenido a la Tienda de Ropa, tu destino en línea para encontrar las últimas tendencias en moda y
+                    tecnología textil. Nuestra aplicación se esfuerza por ofrecerte una experiencia de compra única,
+                    combinando la conveniencia de las compras en línea con la emoción de descubrir nuevas prendas de moda.
+                </p>
+                <p>
+                    Explora nuestro catálogo diverso que incluye ropa de diseñadores reconocidos y productos electrónicos
+                    de última generación. Nos comprometemos a brindarte productos de alta calidad y un servicio al cliente
+                    excepcional.
+                </p>
+                <p>
+                    ¡Esperamos que disfrutes de tu experiencia de compra con nosotros y que encuentres los artículos perfectos
+                    para complementar tu estilo y mejorar tu vida diaria!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

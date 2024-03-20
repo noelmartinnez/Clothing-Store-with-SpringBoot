@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Perfil')">
+    <!-- Enlace a Bootstrap Stylesheet -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyL7Q4q6txlSZq9ubRSfau8UcK7J6h"
+          crossorigin="anonymous"/>
+</head>
+
+<body style="font-family: 'Quicksand', sans-serif;">
+
+<div th:if="${logueado != null}">
+        <div th:replace="fragments :: navbar(userName=${logueado} ? ${logueado.getNombre()} : '',
+                     userId=${logueado} ? ${logueado.getId()} : '',
+                     admin=${logueado} ? ${logueado.isAdmin()} : '')"></div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-center" th:text="'Perfil de ' + ${usuario.nombre}"></h2>
+            </div>
+        </div>
+
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-6">
+                <dl class="row text-center">
+                    <div class="col-sm-6">
+                        <dt>Correo Electrónico:</dt>
+                        <dd th:text="${usuario.email}"></dd>
+
+                        <dt>Nombre:</dt>
+                        <dd th:text="${usuario.nombre}"></dd>
+
+                        <dt>Apellidos:</dt>
+                        <dd th:text="${usuario.apellidos != null ? usuario.apellidos : 'No especificados'}"></dd>
+
+                        <dt>Contraseña:</dt>
+                        <dd th:text="${usuario.password}"></dd>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <dt>Teléfono:</dt>
+                        <dd th:text="${usuario.telefono != null ? usuario.telefono : 'No especificado'}"></dd>
+
+                        <dt>Código Postal:</dt>
+                        <dd th:text="${usuario.codigopostal != null ? usuario.codigopostal : 'No especificado'}"></dd>
+
+                        <dt>País:</dt>
+                        <dd th:text="${usuario.pais != null ? usuario.pais : 'No especificado'}"></dd>
+
+                        <dt>Población:</dt>
+                        <dd th:text="${usuario.poblacion != null ? usuario.poblacion : 'No especificada'}"></dd>
+
+                        <dt>Dirección:</dt>
+                        <dd th:text="${usuario.direccion != null ? usuario.direccion : 'No especificada'}"></dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <div class="text-center">
+                    <a th:href="@{'/perfil/' + ${logueado.getId()} + '/actualizar'}" class="btn btn-primary">Actualizar Perfil</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-center">
+                    <a href="" class="btn btn-primary" th:href="@{'/perfil/' + ${logueado.getId()} + '/pedidos'}">Ver Pedidos</a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${usuario.admin}" class="row mt-4">
+            <div class="col">
+                <div class="text-center">
+                    <span>Eres el administrador del sistema.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"></div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments :: head (titulo='Carrito')"></head>
+<body>
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                     userId=${usuario} ? ${usuario.getId()} : '',
+                     admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Carrito de compras</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <!-- Otros encabezados según tus necesidades -->
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterar sobre las líneas del carrito y mostrar la información -->
+        <tr th:each="linea : ${lineasCarrito}">
+            <td th:text="${linea.producto.nombre}"></td>
+            <td th:text="${linea.cantidad}"></td>
+            <!-- Otros campos según tus necesidades -->
+        </tr>
+        </tbody>
+    </table>
+    <div id="totalCompra" class="mt-3">
+        <h4>Total: <span th:text="${totalCarrito}"></span></h4>
+    </div>
+    <!-- Botón de peticiones post-->
+    <form th:action="@{/tiendaropa/compra/checkout}" method="post">
+        <button type="submit" class="btn btn-primary mt-3">Comprar</button>
+    </form>
+
+
+</div>
+
+
+</body>
+</html>

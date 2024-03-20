@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Detalles del Producto')"></head>
+
+<body>
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img th:src="@{/assets/{productoImg}(productoImg=${producto.img})}" th:alt="'Imagen de ' + ${producto.nombre}" class="img-fluid" />
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-3" th:text="${producto.nombre}"></h2>
+            <p class="lead mb-4" th:style="'font-size: 24px; font-weight: bold;'">
+                <span th:text="'Precio: '"></span>
+                <span th:text="${producto.precio} + '€'"></span>
+            </p>
+            <p th:text="'Stock: ' + ${producto.stock}"></p>
+            <p th:text="'Número de referencia: ' + ${producto.numref}"></p>
+
+            <button class="btn btn-danger btn-xs" onmouseover="" style="cursor: pointer;"
+                    th:onclick="'del(\'/admin/tiendaropa/productos/' + ${producto.id} + '\')'">borrar
+            </button>
+
+
+            <a class="btn btn-primary btn-xs" th:href="@{/admin/tiendaropa/productos/{id}/editar(id=${producto.id})}"/>editar</a>
+
+            <!-- Volver al catálogo -->
+            <a class="btn btn-secondary ml-2" th:href="@{/admin/tiendaropa/catalogo}">Volver al catálogo</a>
+        </div>
+    </div>
+    <div>
+        <h3>Comentarios</h3>
+        <ul class="list-group">
+            <!-- Iterar sobre los comentarios y mostrarlos -->
+            <li th:each="comentario : ${comentarios}" class="list-group-item">
+                <div>
+                    <p class="comentario-descripcion" th:text="${comentario.descripcion}"></p>
+                    <p class="comentario-fecha" th:text="${comentario.fecha}"></p>
+                    <!-- Otros campos del comentario si los tienes -->
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Incluir fragmentos de JavaScript si es necesario -->
+<div th:replace="fragments::javascript"></div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+
+    .container {
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        border-radius: 5px;
+    }
+
+    .btn-primary:disabled,
+    .btn-secondary:disabled {
+        opacity: 0.5;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .list-group {
+        margin-top: 20px;
+    }
+
+    .list-group-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .comentario-descripcion {
+        font-weight: bold;
+    }
+
+    .comentario-fecha {
+        color: #666;
+    }
+
+</style>
+<script type="text/javascript">
+    function del(urlBorrar) {
+        if (confirm('¿Estás seguro/a de que quieres borrar el producto?')) {
+            fetch(urlBorrar, {
+                method: 'DELETE'
+            }).then((res) => {
+                // Redirige a la vista de administrador después de borrar el producto
+                window.location.href = '/admin/tiendaropa/catalogo';
+            });
+        }
+    }
+</script>
+
+</body>
+
+</html>

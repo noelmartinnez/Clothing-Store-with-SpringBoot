@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Panel Administración')"></head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasándolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 75vh; margin: 0;">
+    <div style="background-color: #87CEEB; padding: 20px; border-radius: 10px; text-align: center; width: 600px; height: 400px;">
+        <div style="background-color: blue; width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+
+            <a style="margin: 10px; padding: 15px; background-color: #ffffff; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;" href="/admin/usuarios">Usuarios</a>
+
+            <a style="margin: 10px; padding: 15px; background-color: #ffffff; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;" href="/admin/pedidos">Pedidos</a>
+            <a style="margin: 10px; padding: 15px; background-color: #ffffff; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;" href="/admin/tiendaropa/catalogo">Productos</a>
+            <a style="margin: 10px; padding: 15px; background-color: #ffffff; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;" href="/admin/categorias">Categorias</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Catalogo')"></head>
+
+<body>
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                     userId=${usuario} ? ${usuario.getId()} : '',
+                     admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<h2>Catálogo de productos</h2>
+<div style="max-width: 400px; margin: 0 auto;margin-bottom: 60px;margin-top: 30px">
+    <form method="post" th:action="@{'/tiendaropa/productos/buscarPorCategoria'}">
+        <div class="input-group mb-3">
+            <select class="form-control" id="categoriaId" name="categoriaId">
+                <option value="">Todas las categorías</option>
+                <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nombre}"></option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Buscar por Categoría</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="catalogo">
+    <!-- Iterar sobre la lista de productos y mostrarlos uno debajo del otro -->
+    <div th:each="producto : ${productos}" class="tarjeta-producto" th:with="detallesURL=@{/tiendaropa/productos/{id}(id=${producto.id})}">
+        <!-- Enlace a la vista de detalles del producto -->
+        <a th:href="${detallesURL}" style="text-decoration: none; color: inherit;">
+            <!-- Div que muestra todos los detalles del producto -->
+            <div class="detalles">
+                <h3 th:text="${producto.nombre}"></h3>
+                <p class="lead mb-4" th:style="'font-size: 24px; '">
+                    <span th:text="${producto.precio} + '€'"></span>
+                </p>
+                <img th:src="@{/assets/{productoImg}(productoImg=${producto.img})}" th:alt="'Imagen de ' + ${producto.nombre}" class="imagenes-celdas"/>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+<div th:replace="fragments::javascript"/>
+<style>
+    .imagenes-celdas {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 45px;
+    }
+
+    .tarjeta-producto {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 550px;
+        transition: transform 0.3s, background-color 0.3s;
+        cursor: pointer;
+    }
+
+    .tarjeta-producto:hover {
+        transform: scale(1.1);
+        background-color: #f0f0f0;
+    }
+
+    .tarjeta-producto .detalles {
+        color: #000; /* Cambia el color del texto a negro por defecto */
+        text-decoration: none; /* Elimina el subrayado por defecto */
+        transition: color 0.3s, text-decoration 0.3s;
+    }
+</style>
+</body>
+</html>

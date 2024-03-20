@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Home')"></head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                     userId=${usuario} ? ${usuario.getId()} : '',
+                     admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<div class="container-carrusel">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div th:each="producto, iterStat : ${productosDestacados}"
+                 th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                <!-- Contenido del carrusel para cada producto -->
+                <a th:href="@{/tiendaropa/productos/{id}(id=${producto.id})}">
+                    <h4 th:text="${producto.nombre}"></h4>
+                    <p th:text="'Precio: $' + ${producto.precio}"></p>
+                    <img th:src="@{/assets/{productoImg}(productoImg=${producto.img})}" th:alt="'Imagen de ' + ${producto.nombre}" class="imagenes-carrusel"/>
+                </a>
+            </div>
+        </div>
+        <!-- Controles del carrusel -->
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+<h2>Productos destacados</h2>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4" th:each="producto, iterStat : ${productosDestacados}">
+            <div class="card mb-4 shadow-sm tarjeta-producto">
+                <a th:href="@{/tiendaropa/productos/{id}(id=${producto.id})}">
+                    <h4 th:text="${producto.nombre}" class="card-title text-center mt-3"></h4>
+                    <p th:text="'Precio: $' + ${producto.precio}" class="text-center"></p>
+                    <img th:src="@{/assets/{productoImg}(productoImg=${producto.img})}" th:alt="'Imagen de ' + ${producto.nombre}" class="imagenes-celdas"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+<style>
+
+    .imagenes-celdas {
+        width: 100%; /* Ancho deseado */
+        height: 300px; /* Alto deseado */
+        object-fit: cover; /* Conserva la relación de aspecto y cubre el área asignada */
+    }
+    .imagenes-carrusel {
+        width: 500px; /* Ancho deseado */
+        height: 300px; /* Alto deseado */
+        object-fit: cover; /* Conserva la relación de aspecto y cubre el área asignada */
+    }
+
+    .tarjeta-producto {
+        width: 100%; /* O el ancho deseado para las tarjetas */
+        height: auto; /* Altura automática según el contenido */
+        /* Otros estilos de las tarjetas de producto */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: black; /* Cambia el color a tu preferencia */
+    }
+
+    #myCarousel {
+        height: 480px; /* Altura del carrusel */
+        width: calc(100% - 150px); /* Ancho del carrusel (ancho de la página menos 80px) */
+        margin-left: auto; /* Centrar el carrusel horizontalmente */
+        margin-right: auto; /* Centrar el carrusel horizontalmente */
+        /*border: 3px solid black;*/ /* Añade un borde de 3px de grosor y color negro */
+        display: flex; /* Para alinear verticalmente */
+        justify-content: center; /* Para alinear verticalmente */
+        align-items: center; /* Para alinear verticalmente */
+        background-color: white; /* Fondo blanco */
+    }
+
+    /* Centrar el contenido dentro de cada elemento del carrusel */
+    .carousel-item {
+        text-align: center; /* Centrar el texto */
+    }
+
+    .container-carrusel {
+        background: #d7d7de;
+        padding-left: 20px; /* Margen izquierdo */
+        padding-right: 20px; /* Margen derecho */
+        height: 500px; /* Altura del contenedor */
+        margin-left: auto; /* Centrar el contenedor horizontalmente */
+        margin-right: auto; /* Centrar el contenedor horizontalmente */
+        /*width: calc(100% - 40px);*/ /* Ancho del contenedor restando los márgenes izquierdo y derecho */
+        display: flex; /* Para alinear verticalmente */
+        justify-content: center; /* Para alinear verticalmente */
+        align-items: center; /* Para alinear verticalmente */
+        margin-bottom: 75px; /* Margen inferior */
+    }
+
+    h2{
+       text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .card a:hover {
+        text-decoration: none; /* Elimina el subrayado al pasar el ratón sobre el enlace */
+    }
+
+    .carousel-inner a:hover {
+        text-decoration: none; /* Elimina el subrayado al pasar el ratón sobre el enlace */
+    }
+
+</style>
+
+
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Detalles del Producto')"></head>
+
+<body>
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+</div>
+
+<!-- Si el usuario no está logueado, incluye el Navbar para no logueados -->
+<div th:if="${usuario == null}">
+    <div th:replace="fragments :: navbar_noLogueado"></div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img th:src="@{/assets/{productoImg}(productoImg=${producto.img})}" th:alt="'Imagen de ' + ${producto.nombre}" class="img-fluid" />
+        </div>
+        <div class="col-md-6">
+            <div th:text="${producto.id}"></div>
+            <h2 class="mb-3" th:text="${producto.nombre}"></h2>
+            <p class="lead mb-4" th:style="'font-size: 24px; font-weight: bold;'">
+                <span th:text="'Precio: '"></span>
+                <span th:text="${producto.precio} + '€'"></span>
+            </p>
+            <p th:text="'Stock: ' + ${producto.stock}"></p>
+            <p th:text="'Número de referencia: ' + ${producto.numref}"></p>
+
+            <div th:if="${usuario != null}">
+                <form action="/tiendaropa/carrito" method="post">
+                    <input type="hidden" name="productoId" th:value="${producto.id}" />
+                    <input type="number" name="cantidad" value="1" min="1" th:max="${producto.stock}" step="1"/>
+                    <button type="submit" class="btn btn-primary">Añadir al carrito</button>
+                </form>
+            </div>
+            <div th:if="${usuario == null}">
+                <p>Inicia sesión para añadir productos al carrito.</p>
+            </div>
+
+            <!-- Volver al catálogo -->
+            <a class="btn btn-secondary ml-2" th:href="@{/tiendaropa/catalogo}">Volver al catálogo</a>
+        </div>
+    </div>
+    <div>
+        <h3>Comentarios</h3>
+        <ul class="list-group">
+            <!-- Iterar sobre los comentarios y mostrarlos -->
+            <li th:each="comentario : ${comentarios}" class="list-group-item">
+                <div>
+                    <p class="comentario-descripcion" th:text="${comentario.descripcion}"></p>
+                    <p class="comentario-fecha" th:text="${comentario.fecha}"></p>
+                    <!-- Otros campos del comentario si los tienes -->
+                </div>
+            </li>
+        </ul>
+        <hr style="margin-top: 20px; margin-bottom: 20px;">
+        <!-- Formulario para añadir comentarios -->
+        <div th:if="${usuario != null}">
+            <form method="post" th:action="@{/tiendaropa/productos/comentar/{id}(id=${producto.id})}" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label for="nuevoComentario" style="font-weight: bold;">Añadir Comentario:</label>
+                    <textarea class="form-control" id="nuevoComentario" name="nuevoComentario" rows="3" required></textarea>
+                </div>
+                <input type="hidden" name="productoId" th:value="${producto.id}" />
+                <button type="submit" class="btn btn-primary" style="background-color: #007bff;">Añadir Comentario</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir fragmentos de JavaScript si es necesario -->
+<div th:replace="fragments::javascript"></div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+
+    .container {
+        background-color: #ffffff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        border-radius: 5px;
+    }
+
+    .btn-primary:disabled,
+    .btn-secondary:disabled {
+        opacity: 0.5;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    .list-group {
+        margin-top: 20px;
+    }
+
+    .list-group-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .comentario-descripcion {
+        font-weight: bold;
+    }
+
+    .comentario-fecha {
+        color: #666;
+    }
+
+</style>
+</body>
+
+</html>

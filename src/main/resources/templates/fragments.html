@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head (titulo)">
+    <meta charset="UTF-8"/>
+    <title th:text="${titulo}"></title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+
+<body>
+<!-- NavBar para usuarios logueados -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li th:if="${admin}" class="nav-item">
+                <a class="nav-link" href="/admin">Administración</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tiendaropa/catalogo">Catalogo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tiendaropa/carrito">Carrito</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tiendaropa/envios">Envios</a>
+            </li>
+        </ul>
+    </div>
+
+    <form th:action="@{'/tiendaropa/catalogo/busqueda'}" method="get" th:object="${busquedaData}">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Buscar por nombre de producto" id="busqueda" name="busqueda">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Nombre usuario y opciones -->
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/about" id="userDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false" style="margin-right: 100px;">
+                <span th:text="${userName}">Nombre usuario</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                <a class="dropdown-item" th:href="@{'/perfil/' + ${userId}}">Perfil</a>
+                <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<!-- NavBar para usuarios no logueados -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar_noLogueado">
+    <div class="collapse navbar-collapse" id="navbarNav_noLogueado">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/tiendaropa/catalogo">Catalogo</a>
+            </li>
+        </ul>
+    </div>
+
+    <form th:action="@{'/tiendaropa/catalogo/busqueda'}" method="get" th:object="${busquedaData}">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Buscar por nombre de producto" id="busqueda" name="busqueda">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+            </div>
+        </div>
+    </form>
+
+    <ul class="navbar-nav">
+        <li class="nav-item active">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/registro">Registro</a>
+        </li>
+    </ul>
+</nav>
+
+<div th:fragment="javascript">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Lineas Pedido de Usuario')"></head>
+
+<body>
+
+<!-- Si el usuario está logueado, incluye el Navbar normal -->
+<div th:if="${usuario != null}">
+    <!-- Recuperamos el objeto "usuarios" que nos pasa el Controller y usamos sus atributos, pasandolos al NavBar -->
+    <div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                         userId=${usuario} ? ${usuario.getId()} : '',
+                         admin=${usuario} ? ${usuario.isAdmin()} : '')"></div>
+
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col">
+                <h2>Lineas del pedido</h2>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Fecha</th>
+                        <th>Precio</th>
+                        <th>Producto</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="linea: ${lineas}">
+                        <td th:text="${linea.id}"></td>
+                        <td th:text="${linea.fecha}"></td>
+                        <td th:text="${linea.precio}"></td>
+                        <td th:text="${linea.producto.nombre}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="text-center mt-3"><a th:href="@{'/perfil/' + ${usuario.id} + '/pedidos'}" class="btn btn-link" style="color: #171a1d;">Volver al listado</a></p>
+    </div>
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+</body>
+</html>
